@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>아이디 찾기</title>
+</head>
+<body>
+  <h2>아이디 찾기</h2>
+  <form id="findIdForm">
+    <label for="email">가입하신 이메일을 입력하세요:</label><br/>
+    <input type="email" id="email" name="email" required /><br/><br/>
+    <button type="submit">아이디 찾기</button>
+  </form>
+
+  <p id="responseMsg"></p>
+
+  <script>
+    const form = document.getElementById('findIdForm');
+    const responseMsg = document.getElementById('responseMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = form.email.value;
+
+      try {
+        const response = await fetch('/auth/find-id', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          responseMsg.style.color = 'green';
+          responseMsg.textContent = data.message;
+        } else {
+          responseMsg.style.color = 'red';
+          responseMsg.textContent = data.message || '에러가 발생했습니다.';
+        }
+      } catch (error) {
+        responseMsg.style.color = 'red';
+        responseMsg.textContent = '서버와 통신 중 오류가 발생했습니다.';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>비밀번호 재설정</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      margin: 20px auto;
+      width: 320px;
+      text-align: left;
+      display: none;
+    }
+    form.active {
+      display: block;
+    }
+    input {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>비밀번호 재설정</h1>
+
+  <!-- 1단계: 이메일 입력 (reset-request) -->
+  <form id="requestForm" class="active" method="POST" action="/auth/reset-request">
+    <label>이메일:<br>
+      <input type="email" name="email" required>
+    </label><br>
+    <button type="submit">인증 코드 받기</button>
+  </form>
+
+  <!-- 2단계: 인증코드 + 새 비밀번호 제출 (reset-password) -->
+  <form id="resetForm" method="POST" action="/auth/reset-password">
+    <label>이메일:<br>
+      <input type="email" name="email" required>
+    </label><br>
+    <label>인증 코드:<br>
+      <input type="text" name="code" required>
+    </label><br>
+    <label>새 비밀번호:<br>
+      <input type="password" name="newPassword" required>
+    </label><br>
+    <button type="submit">비밀번호 변경</button>
+  </form>
+
+  <script>
+  const requestForm = document.getElementById('requestForm');
+  const resetForm = document.getElementById('resetForm');
+
+  requestForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(requestForm);
+    const email = formData.get('email');
+
+    const response = await fetch('/auth/reset-request', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'  // JSON 타입 명시
+      },
+      body: JSON.stringify({ email })  // JSON 형태로 변환해서 전송
+    });
+
+    const result = await response.json();
+    alert(result.message);
+    if (response.ok) {
+      // 이메일 입력값을 resetForm으로 자동 전달
+      resetForm.email.value = email;
+      requestForm.classList.remove('active');
+      resetForm.classList.add('active');
+    }
+  });
+</script>
+</body>
+</html>
