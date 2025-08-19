@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>소프트웨어융합전공 - 로그인 / 회원가입 / 아이디 찾기</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    button {
+      margin: 5px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    form {
+      display: none;
+      margin: 20px auto;
+      width: 300px;
+      text-align: left;
+    }
+    form.active {
+      display: block;
+    }
+    input {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      font-size: 14px;
+    }
+    /* 버튼들을 가로로 배치하는 클래스 */
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>소프트웨어융합전공</h1>
+
+  <!-- 로그인/회원가입/아이디 찾기 전환 버튼 -->
+  <div>
+    <button onclick="showForm('login')">로그인</button>
+    <button onclick="showForm('register')">회원가입</button>
+    <button onclick="showForm('findId')">아이디 찾기</button>
+  </div>
+
+  <!-- 로그인 폼 -->
+  <form id="loginForm" class="active" action="/auth/login" method="POST">
+    <h2>로그인</h2>
+    <label>아이디:<br /><input type="text" name="username" required /></label><br />
+    <label>비밀번호:<br /><input type="password" name="password" required /></label><br />
+
+    <!-- 로그인, 비밀번호 재설정, 아이디 찾기 버튼 한 줄에 배치 -->
+    <div class="button-row">
+      <button type="submit">로그인</button>
+      <button type="button" onclick="location.href='/reset.html'">비밀번호 재설정</button>
+      <button type="button" onclick="showForm('findId')">아이디 찾기</button>
+    </div>
+  </form>
+
+  <!-- 회원가입 폼 -->
+  <form id="registerForm" action="/auth/register" method="POST">
+    <h2>회원가입</h2>
+    <label>이름:<br /><input type="text" name="name" required /></label><br />
+    <label>아이디:<br /><input type="text" name="username" required /></label><br />
+    <label>비밀번호:<br /><input type="password" name="password" required /></label><br />
+    <label>이메일:<br /><input type="email" name="email" required /></label><br />
+    <button type="submit">회원가입</button>
+  </form>
+
+  <!-- 아이디 찾기 폼 -->
+  <form id="findIdForm" action="/auth/find-id" method="POST">
+    <h2>아이디 찾기</h2>
+    <label>가입한 이메일:<br /><input type="email" name="email" required /></label><br />
+    <button type="submit">아이디 찾기</button>
+  </form>
+
+  <script>
+    function showForm(formName) {
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.remove('active');
+      document.getElementById('findIdForm').classList.remove('active');
+      document.getElementById(formName + 'Form').classList.add('active');
+    }
+  </script>
+</body>
+</html>
